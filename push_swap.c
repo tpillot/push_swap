@@ -1,6 +1,5 @@
 #include "push_swap.h"
 
-
 void	put_error(void)
 {
 	write(2, "error\n", 6);
@@ -8,23 +7,6 @@ void	put_error(void)
 }
 
 void	check_doublon(t_list_nb *first)
-{
-	t_list_nb 	*tmp;
-
-	while (!first->last)
-	{
-		tmp = first->next;
-		while (!tmp->first)
-		{
-			if (first->nb == tmp->nb)
-				put_error();
-			tmp = tmp->next;
-		}
-		first = first->next;
-	}
-}
-
-void	check_doublon2(t_list_nb *first)
 {
 	t_list_nb 	*tmp;
 	t_list_nb 	*tmp2;
@@ -72,50 +54,54 @@ void	go_to_next_digit(char **str)
 		(*str)++;
 }
 
-void	add_nb_to_list(t_list_nb **first, char **str)
+
+void	add_nb_to_list(t_stack *stack, char **str)
 {
 	t_list_nb	*new;
-	t_list_nb	*tmp;
 
 	if (!(new = ft_memalloc(sizeof(t_list_nb))))
 			put_error();
 	new->nb = ft_atoi(*str);
-	if (!*first)
+	if (!stack->list_a)
 	{	
 		new->prev = new;
 		new->next = new;
-		*first = new;
+		stack->list_a = new;
 	}
 	else
 	{
-		new->prev = (*first)->prev;
-		new->next = *first;
-		(*first)->prev->next = new;
-		(*first)->prev = new;
+		new->prev = stack->list_a->prev;
+		new->next = stack->list_a;
+		stack->list_a->prev->next = new;
+		stack->list_a->prev = new;
 	}
+	stack->size_a++;
 }
+
 
 void print_list(t_list_nb *first, int way)
 {
 	t_list_nb *tmp;
 
 	tmp = first;
+	if (!first)
+		return ;
 	while (42)
 	{
-		printf("%d\n", tmp->nb);
+		ft_putnbr(tmp->nb);
+		ft_putchar('\n');
 		tmp = (way == 0 ? tmp->next : tmp->prev);
 		if (tmp == first)
 			break ;
 	}
+	ft_putchar('\n');
 }
 
 int		main(int ac, char **av)
 {
-	t_list_nb	*list_a;
-	t_list_nb	*list_b;
+	t_stack		stack;
 
-	list_a = NULL;
-	list_b = NULL;
+	ft_bzero(&stack, sizeof(t_stack));
 	if (ac == 1)
 		put_error();
 	while (*(++av))
@@ -123,16 +109,18 @@ int		main(int ac, char **av)
 		while(**av)
 		{
 			check_number(*av);
-			add_nb_to_list(&list_a, av);
+			add_nb_to_list(&stack, av);
 			go_to_next_digit(av);
 		}
 	}
-	print_list(list_b, 1);
-	printf("\n");
+	check_doublon(stack.list_a);
+	//print_list(stack.list_a, 0);
+	//printf("%d\n", stack.size_a);
+	quick_sort(&stack, stack.size_a);
+	print_list(stack.list_a, 0);
+	printf("total : %d\n", stack.total);
 	return (0);
 }
-
-
 
 
 

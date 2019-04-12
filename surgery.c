@@ -1,5 +1,33 @@
 #include "push_swap.h"
 
+// void	new_surgery(t_stack *stack, char *str)
+// {
+// 	t_surgery	*new;
+
+// 	if (!(new = ft_memalloc(sizeof(t_surgery))))
+// 		put_error();
+// 	if (!(new->str = ft_strdup(str)))
+// 		put_error();
+// 	if (!stack->surgery)
+// 	{	
+// 		new->prev = new;
+// 		new->next = new;
+// 		stack->surgery = new;
+// 	}
+// 	else
+// 	{
+// 		new->prev = stack->surgery->prev;
+// 		new->next = stack->surgery;
+// 		stack->surgery->prev->next = new;
+// 		stack->surgery->prev = new;
+// 	}
+// }
+
+// void	check_surgery(t_surgery *surgery, int size)
+// {
+
+// }
+
 void	swap(t_list_nb *list)
 {
 	int		tmp;
@@ -15,34 +43,45 @@ void	ss(t_list_nb *list_a, t_list_nb *list_b)
 	swap(list_b);
 }
 
-void	push(t_list_nb **list_1, t_list_nb **list_2)
+void	push(t_list_nb **dst, t_list_nb **src, int *size_src, int *size_dst)
 {
 	t_list_nb	*tmp;
+	t_list_nb	*tmp2;
 
-	tmp = *list_2;
-	if (!*list_1)
-		*list_1 = tmp;	
-	if (*list_2 != (*list_2)->next)
+	tmp = *src;
+	tmp2 = *dst;
+	if (!*src)
+		return ;
+	if ((*src)->next == *src)
+		*src = NULL;
+	else
 	{
-		(*list_2)->next->prev = (*list_2)->prev;
-		(*list_2)->prev->next = (*list_2)->next;
-		*list_2 = (*list_2)->next;
+		(*src)->next->prev = (*src)->prev;
+		(*src)->prev->next = (*src)->next;
+		*src = (*src)->next;
+	}
+	*dst = tmp;
+	if (tmp2)
+	{
+		tmp->next = tmp2;
+		tmp->prev = tmp2->prev;
+		tmp2->prev->next = tmp;
+		tmp2->prev = tmp;
 	}
 	else
-		*list_2 = NULL;
-	if (*list_1)
-		*list_1 = tmp;
-	if (tmp)
 	{
-		tmp->next = (*list_1);
-		tmp->prev = (*list_1)->prev;
-		(*list_1)->prev = tmp;
+		tmp->prev = tmp;
+		tmp->next = tmp;
 	}
+	(*size_src)--;
+	(*size_dst)++;
 }
 
 void	rotate(t_list_nb **list)
 {
-	*list = (*list)->prev;
+	if (!*list)
+		return ;
+	*list = (*list)->next;
 }
 
 void	rr(t_list_nb **list_1, t_list_nb **list_2)
@@ -53,7 +92,9 @@ void	rr(t_list_nb **list_1, t_list_nb **list_2)
 
 void	reverse_rotate(t_list_nb **list)
 {
-	*list = (*list)->next;
+	if (!*list)
+		return ;
+	*list = (*list)->prev;
 }
 
 void	rrr(t_list_nb **list_1, t_list_nb **list_2)

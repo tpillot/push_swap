@@ -2,6 +2,7 @@ NAME = libft.a
 INCLUDE = includes/
 FLAGS = -Wall -Wextra -Werror
 SRCS = ft_atoi.c\
+		get_next_line.c\
 		ft_bzero.c\
 		ft_isalnum.c\
 		ft_isalpha.c\

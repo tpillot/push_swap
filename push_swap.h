@@ -2,6 +2,7 @@
 # define PUSH_SWAP_H
 
 # include "libft/includes/libft.h"
+# include "libft/includes/get_next_line.h"
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <unistd.h>
@@ -13,7 +14,7 @@
 
 typedef struct		s_surgery
 {
-	char				*str;
+	char				str[4];
 	struct s_surgery	*next;
 	struct s_surgery	*prev;
 }					t_surgery;
@@ -22,7 +23,7 @@ typedef struct		s_stack
 {
 	int					size_a;
 	int					size_b;
-	int					total;
+	int					*tab;
 	struct s_list_nb	*list_a;
 	struct s_list_nb	*list_b;
 	struct s_surgery	*surgery;
@@ -45,5 +46,8 @@ void	reverse_rotate(t_list_nb **list);
 void	rrr(t_list_nb **list_1, t_list_nb **list_2);
 void	bubble_sort(t_list_nb *list);
 void	quick_sort(t_stack	*stack, int size);
+void	new_surgery(t_surgery **list, char *str);
+void	print_surgery(t_stack stack);
+
 
 #endif

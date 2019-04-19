@@ -1,5 +1,11 @@
 #include "push_swap.h"
 
+void insertion_sort(t_stack	*stack, int size)
+{
+	while (stack->list_a)
+		
+}
+
 void	put_error(void)
 {
 	write(2, "error\n", 6);
@@ -116,9 +122,12 @@ int		main(int ac, char **av)
 	check_doublon(stack.list_a);
 	//print_list(stack.list_a, 0);
 	//printf("%d\n", stack.size_a);
-	quick_sort(&stack, stack.size_a);
-	print_list(stack.list_a, 0);
-	printf("total : %d\n", stack.total);
+	if (stack.size_a < 50)
+		insertion_sort(&stack);
+	else
+		quick_sort(&stack, stack.size_a);
+	//print_list(stack.list_a, 0);
+	print_surgery(stack);
 	return (0);
 }
 

@@ -24,20 +24,6 @@ void	sort_tab(int *tab, int size)
 	}
 }
 
-int 	there_is_lower(t_list_nb *list, int nb , int size)
-{
-	int			i;
-
-	i = -1;
-	while (++i < size)
-	{
-		if (list->nb <= nb)
-			return (1);
-		list = list->next;
-	}
-	return (0);
-}
-
 int		best_way(t_list_nb *list, int nb)
 {
 	t_list_nb	*tmp;
@@ -58,27 +44,31 @@ int		best_way(t_list_nb *list, int nb)
 	return(i);
 }
 
-int		get_median(t_list_nb *list, int size)
+int		get_median(t_list_nb *list, int size, t_stack *stack)
 {
 	int			i;
-	int			*tab;
 
-	if (!(tab = ft_memalloc(sizeof(int) * size)))
+	if (!(stack->tab = ft_memalloc(sizeof(int) * size)))
 		return (0);
 	i = 0;
 	while (i < size)
 	{
-		tab[i] = list->nb;
+		stack->tab[i] = list->nb;
 		list = list->next;
 		i++;
 	}
-	sort_tab(tab, size);
-	return (tab[size / 2]);
+	sort_tab(stack->tab, size);
+	i = stack->tab[size / 2];
+	free(stack->tab);
+	return (i);
 }
 
 int		is_sort(t_list_nb *list , int size)
 {
-	while (size--)
+	int i;
+
+	i = 0;
+	while (i++ < size - 1)
 	{
 		if (list->nb > list->next->nb)
 			return (0);
@@ -103,136 +93,71 @@ int		biggest(t_list_nb *list)
 	return (biggest);
 }
 
-int		smaller(t_list_nb *list, int size)
-{
-	int		smaller;
-	int		i;
-	t_list_nb	*tmp;
-
-	tmp = list->next;
-	smaller = list->nb;
-	while (++i < size)
-	{
-		if (tmp->nb < smaller)
-			smaller = tmp->nb;
-		tmp = tmp->next;
-	}
-	return (smaller);
-}
-
 void		quick_sort(t_stack	*stack, int size)
 {
-	t_list_nb	*tmp;
 	int			i;
 	int			size_2;
 	int			med;
-	int			way;
 
 	if (is_sort(stack->list_a, size))
 	 	return ;
-
-	med = get_median(stack->list_a, size);
-
+	med = get_median(stack->list_a, size, stack);
 	i = -1;
-	tmp = stack->list_a;
-
-	if (size <= 100)
+	while (++i < size)
 	{
-		while (stack->list_b->nb < med)
+		if (stack->list_a->nb >= med)
 		{
-			way = best_way(stack->list_a, smaller(stack->list_b, size));
-			while (stack->list_a->nb != smaller(stack->list_b, size))
-			{
-				(i < 0 ? rotate(&(stack->list_b)) : reverse_rotate(&(stack->list_b)));
-				stack->total++;
-			}
 			push(&(stack->list_b), &(stack->list_a), &(stack->size_a), &(stack->size_b));
-			stack->total++;
+			new_surgery(&stack->surgery, "pb");
 		}
-		size_2 = stack->size_b;
+		else
+		{
+			rotate(&(stack->list_a));
+			new_surgery(&stack->surgery, "ra");
+		}
+	}
+	size_2 = stack->size_b;
+	i = best_way(stack->list_b, med);
+	if (size_2 <= 48)
+	{
 		while (stack->list_b)
 		{
+			i = best_way(stack->list_b, biggest(stack->list_b));
+			while (stack->list_b->nb != biggest(stack->list_b))
+			{
+				(i < 0 ? rotate(&(stack->list_b)) : reverse_rotate(&(stack->list_b)));
+				(i < 0 ? new_surgery(&stack->surgery, "rb") : new_surgery(&stack->surgery, "rrb"));
+			}
 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
-			stack->total++;
+			new_surgery(&stack->surgery, "pa");
 		}
 	}
 	else
 	{
-		while (++i < size)
+		while (stack->size_b != 1)
 		{
-			if (stack->list_a->nb <= med)
+			if (stack->list_b->nb == med)
 			{
-				push(&(stack->list_b), &(stack->list_a), &(stack->size_a), &(stack->size_b));
-				stack->total++;
-				if (stack->list_b == tmp)
-					tmp = stack->list_a;
+				rotate(&(stack->list_b));
+				new_surgery(&stack->surgery, "rb");
 			}
-			else
-			{
-				if (there_is_lower(stack->list_a, med, size - i))
-				{
-					rotate(&(stack->list_a));
-					stack->total++;
-				}
-				else
-					break ;
-			}
-
-		}
-		size_2 = stack->size_b;
-
-		way = best_way(stack->list_a, tmp->nb);
-		i = best_way(stack->list_b, med);
-
-		while (stack->list_a->nb != tmp->nb)
-		{
-			(way < 0 ? rotate(&(stack->list_a)) : reverse_rotate(&(stack->list_a)));
-			stack->total++;
-		}
-		// if (size_2 <= 48)
-		// {
-		// 	while (stack->list_b)
-		// 	{
-		// 		i = best_way(stack->list_b, biggest(stack->list_b));
-		// 		while (stack->list_b->nb != biggest(stack->list_b))
-		// 		{
-		// 			(i < 0 ? rotate(&(stack->list_b)) : reverse_rotate(&(stack->list_b)));
-		// 			stack->total++;
-		// 		}
-		// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
-		// 		stack->total++;
-		// 	}
-		// }
-		// else
-		// {
-		while (stack->list_b->nb != med)
-		{
-			(i < 0 ? rotate(&(stack->list_b)) : reverse_rotate(&(stack->list_b)));
-			stack->total++;
-		}
-		while (stack->list_b)
-		{
 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
-			stack->total++;
+			new_surgery(&stack->surgery, "pa");
 		}
 	}
-	// }
-
-	quick_sort(stack, size_2 - 1);
-
-	way = best_way(stack->list_a, med);
-
-	while (stack->list_a->nb != med)
-	{
-		(way < 0 ? rotate(&(stack->list_a)) : reverse_rotate(&(stack->list_a)));
-		stack->total++;
-	}
+	push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	new_surgery(&stack->surgery, "pa");
 	rotate(&(stack->list_a));
-	stack->total++;
-
+	new_surgery(&stack->surgery, "ra");
+	quick_sort(stack, size_2 - 1);
+	i = -1;
+	while (++i < size - size_2 + 1)
+	{
+		reverse_rotate(&(stack->list_a));
+		new_surgery(&stack->surgery, "rra");
+	}
 	quick_sort(stack, size - size_2);
 }
-
 
 
 

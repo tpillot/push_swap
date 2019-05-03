@@ -48,6 +48,7 @@ void	bubble_sort(t_list_nb *list);
 void	quick_sort(t_stack	*stack, int size);
 void	new_surgery(t_surgery **list, char *str);
 void	print_surgery(t_stack stack);
+void	insertion_sort(t_stack *stack, int size);
 
 
 #endif

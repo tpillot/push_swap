@@ -1,8 +1,7 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include "libft/includes/libft.h"
-# include "libft/includes/get_next_line.h"
+# include "../libft/includes/libft.h"
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <unistd.h>
@@ -37,6 +36,12 @@ typedef struct		s_list_nb
 }					t_list_nb;
 
 void	put_error(void);
+void	check_doublon(t_list_nb *first);
+int		best_way(t_list_nb *list, int nb);
+void	add_nb_to_list(t_stack *stack, char **str);
+void	check_number(char *str);
+void	go_to_next_digit(char **str);
+void	quick_sort_a(t_stack *stack, int size);
 void	swap(t_list_nb *list);
 void	ss(t_list_nb *list_a, t_list_nb *list_b);
 void	push(t_list_nb **dst, t_list_nb **src, int *size_src, int *size_dst);

@@ -24,26 +24,6 @@ void	sort_tab(int *tab, int size)
 	}
 }
 
-int		best_way(t_list_nb *list, int nb)
-{
-	t_list_nb	*tmp;
-	int		i;
-
-	tmp = list;
-	i = 0;
-	while (list->nb != nb)
-	{
-		list = list->next;
-		i++;
-	}
-	while(list != tmp)
-	{
-		list = list->next;
-		i--;
-	}
-	return(i);
-}
-
 int		get_median(t_list_nb *list, int size, t_stack *stack)
 {
 	int			i;
@@ -97,18 +77,20 @@ void		quick_sort(t_stack	*stack, int size)
 {
 	int			i;
 	int			size_2;
+	int			sent = 0;
 	int			med;
 
 	if (is_sort(stack->list_a, size))
 	 	return ;
 	med = get_median(stack->list_a, size, stack);
 	i = -1;
-	while (++i < size)
+	while (++i < size && sent < size / 2 + size % 2)
 	{
 		if (stack->list_a->nb >= med)
 		{
 			push(&(stack->list_b), &(stack->list_a), &(stack->size_a), &(stack->size_b));
 			new_surgery(&stack->surgery, "pb");
+			sent++;
 		}
 		else
 		{

@@ -1,41 +1,5 @@
 #include "push_swap.h"
 
-int		best_way2(t_list_nb *list, int nb)
-{
-	t_list_nb	*tmp;
-	int		i;
-
-	tmp = list;
-	i = 0;
-	while (list->nb != nb)
-	{
-		list = list->next;
-		i++;
-	}
-	while(list != tmp)
-	{
-		list = list->next;
-		i--;
-	}
-	return(i);
-}
-
-int		biggest2(t_list_nb *list)
-{
-	int		biggest;
-	t_list_nb	*tmp;
-
-	tmp = list->next;
-	biggest = list->nb;
-	while (tmp != list)
-	{
-		if (tmp->nb > biggest)
-			biggest = tmp->nb;
-		tmp = tmp->next;
-	}
-	return (biggest);
-}
-
 int		smallest(t_list_nb *list)
 {
 	int		smallest;

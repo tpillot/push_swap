@@ -7,6 +7,8 @@ int		best_way(t_list_nb *list, int nb)
 
 	tmp = list;
 	i = 0;
+	if (!list)
+		return (0);
 	while (list->nb != nb)
 	{
 		list = list->next;

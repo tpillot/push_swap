@@ -1,5 +1,33 @@
 #include "push_swap.h"
 
+int		there_is_lower(t_list_nb *list, int med, int size)
+{
+	int		i;
+
+	i = -1;
+	while (++i < size)
+	{
+		if (list->nb <= med)
+			return (1);
+		list = list->next;
+	}
+	return (0);
+}
+
+int		there_is_uper(t_list_nb *list, int med, int size)
+{
+	int		i;
+
+	i = -1;
+	while (++i < size)
+	{
+		if (list->nb >= med)
+			return (1);
+		list = list->next;
+	}
+	return (0);
+}
+
 void	sort_tab(int *tab, int size)
 {
 	int 	i;
@@ -73,9 +101,27 @@ int		sent_max_func(t_list_nb *list, int size, int med)
 	return (sent_max);
 }
 
+int		biggest(t_list_nb *list, int size)
+{
+	int		biggest;
+	int		i;
+
+	i = -1;
+	biggest = list->nb;
+	while (++i < size -1)
+	{
+		if (list->next->nb < biggest)
+			biggest = list->next->nb;
+		list = list->next;
+	}
+	return (biggest);
+}
+
+
 int		put_a_to_b(t_stack	*stack, int size)
 {
 	int			i;
+	int way;
 	int			sent_max;
 	int			med;
 	t_list_nb	*tmp;
@@ -86,20 +132,89 @@ int		put_a_to_b(t_stack	*stack, int size)
 	med = get_median(stack->list_a, size, stack);
 	i = -1;
 	sent_max = sent_max_func(stack->list_a, size, med);
-	if (size == 1)
-	{
-		push(&(stack->list_b), &(stack->list_a), &(stack->size_a), &(stack->size_b));
-		new_surgery(&stack->surgery, "pb");
-		return (1);
-	}
+	
+	// if (size == 1)
+	// {
+	// 	push(&(stack->list_b), &(stack->list_a), &(stack->size_a), &(stack->size_b));
+	// 	new_surgery(&stack->surgery, "pb");
+	// 	return (1);
+	// }
 	if (size == 2)
 	{
 		swap(stack->list_a);
 		new_surgery(&stack->surgery, "sa");
 		return (0);
 	}
-	while (++i < size && sent < sent_max)
+	// else if (size == 3)
+	// {
+	// 	if (tmp->nb > tmp->next->nb && tmp->next->nb > tmp->next->next->nb)
+	// 	{
+	// 		swap(stack->list_a);
+	// 		new_surgery(&stack->surgery, "sa");
+	// 		rotate(&(stack->list_a));
+	// 		new_surgery(&stack->surgery, "ra");
+	// 		swap(stack->list_a);
+	// 		new_surgery(&stack->surgery, "sa");
+	// 	}
+	// 	else if (tmp->nb < tmp->next->nb && tmp->next->nb > tmp->next->next->nb)
+	// 	{
+	// 		swap(stack->list_a);
+	// 		new_surgery(&stack->surgery, "sa");
+	// 		if (tmp->next->nb)	
+	// 		{
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			//ft_putstr("cas 3.2\n");
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			//ft_putstr("cas 3\n");
+	// 		}
+	// 		else 
+	// 		{
+	// 			swap(stack->list_b);
+	// 			new_surgery(&stack->surgery, "sb");
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			//ft_putstr("cas 4\n");
+	// 		}
+	// 	}
+	// 	else if (tmp->nb > tmp->next->next->nb)
+	// 	{
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		swap(stack->list_b);
+	// 		new_surgery(&stack->surgery, "sb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas 5\n");
+
+	// 	}
+	// 	else
+	// 	{
+	// 		rotate(&(stack->list_b));
+	// 		new_surgery(&stack->surgery, "rb");
+	// 		swap(stack->list_b);
+	// 		new_surgery(&stack->surgery, "sb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		reverse_rotate(&(stack->list_b));
+	// 		new_surgery(&stack->surgery, "rrb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas 6\n");
+	// 	}
+	// 	return (3);
+	// }
+	while (++i < size)
 	{
+	 	if (!there_is_lower(stack->list_a, med, size - i))
+	 		break ;
 		if (stack->list_a->nb <= med)
 		{
 			if (stack->list_a == tmp)
@@ -128,20 +243,131 @@ int		put_b_to_a(t_stack	*stack, int size)
 	int			i;
 	int			med;
 	t_list_nb	*tmp;
+	int			way = 0;
 	int			sent;
 
 	sent = 0;
 	tmp = stack->list_b;
 	med = get_median(stack->list_b, size, stack);
 	i = -1;
+	//printf("--------%d\n", size);
 	if (size == 1)
 	{
 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
 		new_surgery(&stack->surgery, "pa");
 		return (1);
 	}
+	else if (size == 2)
+	{
+		if (tmp->nb < tmp->next->nb)
+		{
+			swap(stack->list_b);
+			new_surgery(&stack->surgery, "sb");
+			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+			new_surgery(&stack->surgery, "pa");
+			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+			new_surgery(&stack->surgery, "pa");
+		}
+		else
+		{
+			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+			new_surgery(&stack->surgery, "pa");
+			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+			new_surgery(&stack->surgery, "pa");
+		}
+		return (2);
+	}
+	// else if (size == 3)
+	// {
+	// 	if (tmp->nb < tmp->next->nb && tmp->next->nb < tmp->next->next->nb)
+	// 	{
+	// 		rotate(&(stack->list_b));
+	// 		new_surgery(&stack->surgery, "rb");
+	// 		swap(stack->list_b);
+	// 		new_surgery(&stack->surgery, "sb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+		
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		reverse_rotate(&(stack->list_b));
+	// 		new_surgery(&stack->surgery, "rrb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas 1\n");
+	// 	}
+	// 	else if (tmp->nb > tmp->next->nb && tmp->next->nb > tmp->next->next->nb)
+	// 	{
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas 2\n");
+	// 	}
+	// 	else if (tmp->nb < tmp->next->nb && tmp->next->nb > tmp->next->next->nb)
+	// 	{
+	// 		swap(stack->list_b);
+	// 		new_surgery(&stack->surgery, "sb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas delicat\n");
+	// 		if (stack->list_b->nb > stack->list_b->next->nb)	
+	// 		{
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			//ft_putstr("cas 3.2\n");
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			//ft_putstr("cas 3\n");
+	// 		}
+	// 		else 
+	// 		{
+	// 			swap(stack->list_b);
+	// 			new_surgery(&stack->surgery, "sb");
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 			new_surgery(&stack->surgery, "pa");
+	// 			//ft_putstr("cas 4\n");
+	// 		}
+	// 	}
+	// 	else if (tmp->nb > tmp->next->next->nb)
+	// 	{
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		swap(stack->list_b);
+	// 		new_surgery(&stack->surgery, "sb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas 5\n");
+
+	// 	}
+	// 	else
+	// 	{
+	// 		rotate(&(stack->list_b));
+	// 		new_surgery(&stack->surgery, "rb");
+	// 		swap(stack->list_b);
+	// 		new_surgery(&stack->surgery, "sb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		reverse_rotate(&(stack->list_b));
+	// 		new_surgery(&stack->surgery, "rrb");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
+	// 		new_surgery(&stack->surgery, "pa");
+	// 		//ft_putstr("cas 6\n");
+	// 	}
+	// 	return (3);
+	// }
 	while (++i < size)
 	{
+		if (!there_is_uper(stack->list_b, med, size - i))
+			break ;
 		if (stack->list_b->nb >= med)
 		{
 			if (stack->list_b == tmp)
@@ -169,6 +395,8 @@ void		quick_sort_b(t_stack *stack, int size)
 {
 	int			sent;
 
+	if (size <= 0)
+		return ;
 	sent = put_b_to_a(stack, size);
 	if (size <= 1)
 	 	return ;

@@ -38,8 +38,8 @@ int		main(int ac, char **av)
 	// else
 	quick_sort_a(&stack, stack.size_a);
 	//print_list(stack.list_a, 0);
-	if (is_sort2(stack.list_a, stack.size_a))
-		ft_putstr("ok\n");
+	// if (is_sort2(stack.list_a, stack.size_a))
+	// 	ft_putstr("ok\n");
 	print_surgery(stack);
 	return (0);
 }

@@ -57,20 +57,20 @@ int		is_sort(t_list_nb *list , int size)
 	return (1);
 }
 
-int		biggest(t_list_nb *list)
+int		biggest2(t_list_nb *list)
 {
-	int		biggest;
+	t_list_nb	*biggest;
 	t_list_nb	*tmp;
 
 	tmp = list->next;
-	biggest = list->nb;
+	biggest = list;
 	while (tmp != list)
 	{
-		if (tmp->nb > biggest)
-			biggest = tmp->nb;
+		if (tmp->nb > biggest->nb)
+			biggest = tmp;
 		tmp = tmp->next;
 	}
-	return (biggest);
+	return (biggest->nb);
 }
 
 void		quick_sort(t_stack	*stack, int size)

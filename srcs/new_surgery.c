@@ -36,6 +36,7 @@ void	new_surgery(t_surgery **list, char *str)
 			tmp_prev = tmp;
 			tmp = tmp->next;
 		}
+		//tmp->next = new;
 		if (!check_surgery(tmp->str, str))
 			tmp->next = new;
 		else

@@ -36,8 +36,9 @@ typedef struct		s_list_nb
 }					t_list_nb;
 
 void	put_error(void);
+t_list_nb 	*biggest(t_list_nb *list);
 void	check_doublon(t_list_nb *first);
-int		best_way(t_list_nb *list, int nb);
+void	best_way(t_stack *stack, t_list_nb *target, char c);
 void	add_nb_to_list(t_stack *stack, char **str);
 void	check_number(char *str);
 void	go_to_next_digit(char **str);
@@ -54,7 +55,8 @@ void	quick_sort(t_stack	*stack, int size);
 void	new_surgery(t_surgery **list, char *str);
 void	print_surgery(t_stack stack);
 void	insertion_sort(t_stack *stack, int size);
-void	size_3(t_stack	*stack , int size);
+void 	print_list(t_list_nb *first, int way);
+void	size_3(t_stack	*stack);
 
 
 

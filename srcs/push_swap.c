@@ -6,7 +6,7 @@ int		main(int ac, char **av)
 
 	ft_bzero(&stack, sizeof(t_stack));
 	if (ac == 1)
-		put_error();
+		put_error(1);
 	while (*(++av))
 	{
 		while (**av)

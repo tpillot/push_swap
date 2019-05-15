@@ -6,7 +6,7 @@ static void	check_surgery(char *str)
 	ft_strcmp(str, "ra") && ft_strcmp(str, "rb") && ft_strcmp(str, "sa") &&
 	ft_strcmp(str, "ss") && ft_strcmp(str, "sb") && ft_strcmp(str, "rra") &&
 	ft_strcmp(str, "rrb") && ft_strcmp(str, "rr") && ft_strcmp(str, "rrr"))
-		put_error();
+		put_error(1);
 }
 
 void	exect_surgery(char *str, t_stack *stack)
@@ -44,13 +44,13 @@ int 	read_line(char str[4], int fd)
 	while ((read(fd, &buf, 1)))
 	{
 		if (i > 3)
-			put_error();
+			put_error(1);
 		if (buf == '\n')
 			return (1);
 		str[i++] = buf;
 	}
 	if (i != 0)
-		put_error();
+		put_error(1);
 	return (0);
 }
 

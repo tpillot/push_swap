@@ -5,7 +5,7 @@ void	add_nb_to_list(t_stack *stack, char **str)
 	t_list_nb	*new;
 
 	if (!(new = ft_memalloc(sizeof(t_list_nb))))
-		put_error();
+		put_error(1);
 	new->nb = ft_atoi(*str);
 	if (!stack->list_a)
 	{

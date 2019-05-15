@@ -24,7 +24,7 @@ void			new_surgery(t_surgery **list, char *str)
 	t_surgery	*tmp_prev;
 
 	if (!(new = ft_memalloc(sizeof(t_surgery))))
-		put_error();
+		put_error(1);
 	ft_strncpy(new->str, str, 3);
 	if (!*list)
 		*list = new;

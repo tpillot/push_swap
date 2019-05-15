@@ -6,19 +6,18 @@ void	print_list(t_list_nb *first, int way, char c)
 
 	tmp = first;
 	if (c == 'a')
-		ft_putstr("list_a :\n");
+		ft_putstr("list_a :");
 	else
-		ft_putstr("list_b :\n");
+		ft_putstr("list_b :");
 	if (!first)
 	{
-		ft_putendl("empty");
-		ft_putchar('\n');
+		ft_putendl(" empty");
 		return ;
 	}
 	while (42)
 	{
+		ft_putchar(' ');
 		ft_putnbr(tmp->nb);
-		ft_putchar('\n');
 		tmp = (way == 0 ? tmp->next : tmp->prev);
 		if (tmp == first)
 			break ;

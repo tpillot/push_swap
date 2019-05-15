@@ -2,7 +2,9 @@
 
 static	void	create_list(t_stack *stack, char **av)
 {
-	while (*(++av))
+	if (!av[0])
+		put_error(1);
+	while (*(av))
 	{
 		while (**av)
 		{
@@ -10,16 +12,16 @@ static	void	create_list(t_stack *stack, char **av)
 			add_nb_to_list(stack, av);
 			go_to_next_digit(av);
 		}
+		av++;
 	}
+	check_doublon(stack->list_a);
 }
 
-static	int		parsing_option(char *str, t_stack *stack, int ac)
+static	int		register_option(char *str, t_stack *stack)
 {
 	int		i;
 
 	i = -1;
-	if (!str[0])
-		put_error();
 	while (str[++i])
 	{
 		if (str[i] == 'v')
@@ -33,11 +35,25 @@ static	int		parsing_option(char *str, t_stack *stack, int ac)
 		else if (str[i] == 'a')
 			stack->a = 1;
 		else
-			return (1);
+			return (0);
 	}
-	if (ac == 2)
-		put_error();
-	return (0);
+	return (1);
+}
+
+static	int		parsing_option(char **av, t_stack *stack)
+{
+	int		i;
+
+	i = 1;
+	while (av[i] && av[i][0] == '-')
+	{
+		if (!av[i][1] || ft_isdigit(av[i][1]))
+			return (i);
+		if (!(register_option(av[i] + 1, stack)))
+			put_error(2);
+		i++;
+	}
+	return (i);
 }
 
 int				main(int ac, char **av)
@@ -45,18 +61,18 @@ int				main(int ac, char **av)
 	t_stack		stack;
 	char		str[4];
 	int			fd;
+	int			i;
 
 	ft_bzero(&stack, sizeof(t_stack));
 	ft_bzero(str, 4);
 	fd = 0;
-	if (ac == 1)
-		put_error();
-	if (av[1][0] == '-' && !parsing_option(av[1] + 1, &stack, ac))
-		av++;
+	(void)ac;
+	i = parsing_option(av, &stack);
+	av += i;
 	if (stack.d)
 	{
-		if ((fd = open(av[1], O_RDONLY)) < 0)
-			put_error();
+		if ((fd = open(av[0], O_RDONLY)) < 0)
+			put_error(3);
 		av++;
 	}
 	create_list(&stack, av);

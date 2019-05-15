@@ -41,6 +41,7 @@ static	void	exect_option_v_c(t_stack *stack, char *str)
 		ft_putstr("\033[32m");
 	print_list(stack->list_a, 0, 'a');
 	print_list(stack->list_b, 0, 'b');
+	ft_putchar('\n');
 	if (stack->c)
 		ft_putstr("\033[0m");
 }

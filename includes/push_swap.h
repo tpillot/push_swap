@@ -51,7 +51,7 @@ typedef struct		s_list_nb
 	struct s_list_nb	*prev;
 }					t_list_nb;
 
-void					put_error(void);
+void					put_error(int code);
 void					check_doublon(t_list_nb *first);
 void					best_way(t_stack *stack, t_list_nb *target, char c);
 void					add_nb_to_list(t_stack *stack, char **str);

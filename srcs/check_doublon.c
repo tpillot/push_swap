@@ -12,7 +12,7 @@ void	check_doublon(t_list_nb *first)
 		while (tmp != tmp2)
 		{
 			if (first->nb == tmp->nb)
-				put_error();
+				put_error(1);
 			tmp = tmp->next;
 		}
 		first = first->next;

@@ -1,30 +1,24 @@
 #include "push_swap.h"
 
-static void	list_go_to(t_stack *stack, t_list_nb *target, int i, char c)
+static	void	list_go_to(t_stack *stack, t_list_nb *target, int i, char c)
 {
 	if (c == 'a')
 	{
 		while (stack->list_a != target)
-		{
-			(i < 0 ? rotate(&(stack->list_a)) : reverse_rotate(&(stack->list_a)));
-			(i < 0 ? new_surgery(&stack->surgery, "ra") : new_surgery(&stack->surgery, "rra"));
-		}
+			(i < 0 ? rotate(stack, 'a') : reverse_rotate(stack, 'a'));
 	}
 	else
 	{
 		while (stack->list_b != target)
-		{
-			(i < 0 ? rotate(&(stack->list_b)) : reverse_rotate(&(stack->list_b)));
-			(i < 0 ? new_surgery(&stack->surgery, "rb") : new_surgery(&stack->surgery, "rrb"));
-		}
+			(i < 0 ? rotate(stack, 'b') : reverse_rotate(stack, 'b'));
 	}
 }
 
-void	best_way(t_stack *stack, t_list_nb *target, char c)
+void			best_way(t_stack *stack, t_list_nb *target, char c)
 {
 	t_list_nb	*tmp;
 	t_list_nb	*list;
-	int		i;
+	int			i;
 
 	list = c == 'a' ? stack->list_a : stack->list_b;
 	tmp = list;
@@ -34,7 +28,7 @@ void	best_way(t_stack *stack, t_list_nb *target, char c)
 		list = list->next;
 		i++;
 	}
-	while(list != tmp)
+	while (list != tmp)
 	{
 		list = list->next;
 		i--;

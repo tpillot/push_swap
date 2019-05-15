@@ -1,12 +1,20 @@
 #include "push_swap.h"
 
-void print_list(t_list_nb *first, int way)
+void	print_list(t_list_nb *first, int way, char c)
 {
 	t_list_nb *tmp;
 
 	tmp = first;
+	if (c == 'a')
+		ft_putstr("list_a :\n");
+	else
+		ft_putstr("list_b :\n");
 	if (!first)
+	{
+		ft_putendl("empty");
+		ft_putchar('\n');
 		return ;
+	}
 	while (42)
 	{
 		ft_putnbr(tmp->nb);

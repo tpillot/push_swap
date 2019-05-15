@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-int		check_surgery(char *str1, char *str2)
+static	int		check_surgery(char *str1, char *str2)
 {
 	if (!ft_strcmp(str1, "ra") && !ft_strcmp(str2, "rra"))
 		return (1);
@@ -17,7 +17,7 @@ int		check_surgery(char *str1, char *str2)
 	return (0);
 }
 
-void	new_surgery(t_surgery **list, char *str)
+void			new_surgery(t_surgery **list, char *str)
 {
 	t_surgery	*new;
 	t_surgery	*tmp;
@@ -25,7 +25,7 @@ void	new_surgery(t_surgery **list, char *str)
 
 	if (!(new = ft_memalloc(sizeof(t_surgery))))
 		put_error();
-	ft_strncpy(new->str, str, 4);
+	ft_strncpy(new->str, str, 3);
 	if (!*list)
 		*list = new;
 	else
@@ -36,13 +36,12 @@ void	new_surgery(t_surgery **list, char *str)
 			tmp_prev = tmp;
 			tmp = tmp->next;
 		}
-		//tmp->next = new;
 		if (!check_surgery(tmp->str, str))
 			tmp->next = new;
 		else
 		{
 			tmp_prev->next = NULL;
 			free(tmp);
- 		}
+		}
 	}
 }

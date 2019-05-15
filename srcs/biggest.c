@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-t_list_nb *biggest(t_list_nb *list)
+t_list_nb	*biggest(t_list_nb *list)
 {
 	t_list_nb	*biggest;
 	t_list_nb	*tmp;

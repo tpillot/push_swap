@@ -1,163 +1,90 @@
 #include "push_swap.h"
 
-void	sort_tab(int *tab, int size)
+static	int			put_a_to_b(t_stack *stack, int size)
 {
-	int 	i;
-	int		j;
-	int		tmp;
-
-	i = 0;
-	while (i < size)
-	{
-		j = i + 1;
-		while (j < size)
-		{
-			if (tab[i] > tab[j])
-			{
-				tmp = tab[i];
-				tab[i] = tab[j];
-				tab[j] = tmp;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-int		get_median(t_list_nb *list, int size, t_stack *stack)
-{
-	int			i;
-
-	if (!(stack->tab = ft_memalloc(sizeof(int) * size)))
-		return (0);
-	i = 0;
-	while (i < size)
-	{
-		stack->tab[i] = list->nb;
-		list = list->next;
-		i++;
-	}
-	sort_tab(stack->tab, size);
-	i = stack->tab[size / 2];
-	free(stack->tab);
-	return (i);
-}
-
-int		is_sort(t_list_nb *list , int size)
-{
-	int i;
-
-	i = 0;
-	while (i++ < size - 1)
-	{
-		if (list->nb > list->next->nb)
-			return (0);
-		list = list->next;
-	}
-	return (1);
-}
-
-int		biggest2(t_list_nb *list)
-{
-	t_list_nb	*biggest;
-	t_list_nb	*tmp;
-
-	tmp = list->next;
-	biggest = list;
-	while (tmp != list)
-	{
-		if (tmp->nb > biggest->nb)
-			biggest = tmp;
-		tmp = tmp->next;
-	}
-	return (biggest->nb);
-}
-
-void		quick_sort(t_stack	*stack, int size)
-{
-	int			i;
-	int			size_2;
-	int			sent = 0;
 	int			med;
+	t_list_nb	*tmp;
+	t_list_nb	*tmp2;
+	int			sent;
 
-	if (is_sort(stack->list_a, size))
-	 	return ;
+	tmp = stack->list_a;
+	sent = 0;
 	med = get_median(stack->list_a, size, stack);
-	i = -1;
-	while (++i < size && sent < size / 2 + size % 2)
+	if (size == 2)
 	{
-		if (stack->list_a->nb >= med)
-		{
-			push(&(stack->list_b), &(stack->list_a), &(stack->size_a), &(stack->size_b));
-			new_surgery(&stack->surgery, "pb");
-			sent++;
-		}
-		else
-		{
-			rotate(&(stack->list_a));
-			new_surgery(&stack->surgery, "ra");
-		}
+		swap(stack, 'a');
+		return (0);
 	}
-	size_2 = stack->size_b;
-	i = best_way(stack->list_b, med);
-	if (size_2 <= 48)
+	else if (size == 3)
+		return (size_3(stack));
+	while ((tmp2 = there_is_lower(stack->list_a, med, size--)))
+	{
+		best_way(stack, tmp2, 'a');
+		if (stack->list_a == tmp)
+			tmp = stack->list_a->next;
+		push_b(stack);
+		sent++;
+	}
+	best_way(stack, tmp, 'a');
+	return (sent);
+}
+
+static	int			put_b_to_a(t_stack *stack, int size)
+{
+	int			med;
+	t_list_nb	*tmp;
+	t_list_nb	*tmp2;
+	int			sent;
+
+	sent = 0;
+	tmp = stack->list_b;
+	med = get_median(stack->list_b, size, stack);
+	if (size == 1)
+	{
+		push_a(stack);
+		return (1);
+	}
+	else if (size == 2)
+		return (size_2(stack));
+	while ((tmp2 = there_is_uper(stack->list_b, med, size--)))
+	{
+		best_way(stack, tmp2, 'b');
+		if (stack->list_b == tmp)
+			tmp = stack->list_b->next;
+		push_a(stack);
+		sent++;
+	}
+	best_way(stack, tmp, 'b');
+	return (sent);
+}
+
+static	void		quick_sort_b(t_stack *stack, int size)
+{
+	int			sent;
+
+	if (size <= 0)
+		return ;
+	if (stack->size_b <= 40)
 	{
 		while (stack->list_b)
 		{
-			i = best_way(stack->list_b, biggest(stack->list_b));
-			while (stack->list_b->nb != biggest(stack->list_b))
-			{
-				(i < 0 ? rotate(&(stack->list_b)) : reverse_rotate(&(stack->list_b)));
-				(i < 0 ? new_surgery(&stack->surgery, "rb") : new_surgery(&stack->surgery, "rrb"));
-			}
-			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
-			new_surgery(&stack->surgery, "pa");
+			best_way(stack, biggest(stack->list_b), 'b');
+			push_a(stack);
 		}
+		return ;
 	}
-	else
-	{
-		while (stack->size_b != 1)
-		{
-			if (stack->list_b->nb == med)
-			{
-				rotate(&(stack->list_b));
-				new_surgery(&stack->surgery, "rb");
-			}
-			push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
-			new_surgery(&stack->surgery, "pa");
-		}
-	}
-	push(&(stack->list_a), &(stack->list_b), &(stack->size_b), &(stack->size_a));
-	new_surgery(&stack->surgery, "pa");
-	rotate(&(stack->list_a));
-	new_surgery(&stack->surgery, "ra");
-	quick_sort(stack, size_2 - 1);
-	i = -1;
-	while (++i < size - size_2 + 1)
-	{
-		reverse_rotate(&(stack->list_a));
-		new_surgery(&stack->surgery, "rra");
-	}
-	quick_sort(stack, size - size_2);
+	sent = put_b_to_a(stack, size);
+	quick_sort_a(stack, sent);
+	quick_sort_b(stack, size - sent);
 }
 
+void				quick_sort_a(t_stack *stack, int size)
+{
+	int			sent;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	if (size <= 1 || is_sort(stack->list_a, size))
+		return ;
+	sent = put_a_to_b(stack, size);
+	quick_sort_a(stack, size - sent);
+	quick_sort_b(stack, sent);
+}
